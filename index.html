@@ -3,159 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tostadores | Directorio Premium</title>
+    <title>Tostadores Argentinos | Selección Boutique</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     
     <style>
         :root {
-            --bg: #FCFBFA; /* Blanco hueso */
-            --text: #1A1A1A;
-            --text-light: #666666;
-            --border: #E5E5E5;
-            --accent: #5D4037;
+            --bg: #FDFCFB;
+            --text: #2D2421;
+            --text-light: #7A6F6C;
+            --border: #E8E2DF;
+            --accent: #6F4E37; /* Color Café Tostado */
+            --shadow: 0 10px 30px -10px rgba(111, 78, 55, 0.1);
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0; padding: 0;
         }
 
         header {
-            padding: 80px 20px 40px;
+            padding: 60px 20px;
             text-align: center;
+            border-bottom: 1px solid var(--border);
+            background: white;
         }
 
         h1 {
-            font-size: 1.8rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
             margin: 0;
+            color: var(--text);
         }
 
         .subtitle {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-top: 10px;
-            letter-spacing: 1px;
+            font-size: 0.95rem;
+            color: var(--accent);
+            margin-top: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .container {
-            max-width: 1100px;
-            margin: 0 auto 100px;
+            max-width: 1200px;
+            margin: 40px auto;
             padding: 0 20px;
         }
 
-        /* FILTROS MINIMALISTAS */
+        /* FILTROS */
         .controls {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
             margin-bottom: 50px;
         }
 
         select, input {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--border);
-            padding: 12px 5px;
+            background: white;
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 12px;
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--text);
             outline: none;
-            transition: border-color 0.3s;
+            box-shadow: var(--shadow);
         }
 
-        select:focus, input:focus {
-            border-color: var(--text);
-        }
-
-        /* GALERÍA DE TOSTADORES */
+        /* GRILLA DE TARJETAS */
         .grid-tostadores {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
         }
 
         .card {
-            border-top: 1px solid var(--border);
-            padding-top: 25px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            transition: opacity 0.3s;
+            box-shadow: var(--shadow);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
         }
 
         .brand-name {
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: 800;
             margin: 0;
-            letter-spacing: -0.2px;
         }
 
         .location {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 8px 0 25px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin: 5px 0 25px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .btn-group {
-            display: flex;
-            gap: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: auto;
         }
 
         .btn {
             text-decoration: none;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 700;
             color: var(--text);
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.2s;
+        }
+
+        .btn-preview {
+            grid-column: span 2;
+            background: var(--text);
+            color: white;
+            border: none;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* MODAL DE VISTA PREVIA */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(45, 36, 33, 0.9);
+            z-index: 1000;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .modal-content {
+            background: white;
+            width: 100%; height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
             position: relative;
         }
-
-        .btn::after {
-            content: '';
+        .close-modal {
             position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: -2px;
-            left: 0;
-            background-color: var(--text);
-            transition: width 0.3s;
+            top: 20px; right: 20px;
+            background: var(--accent);
+            color: white; border: none;
+            padding: 10px 20px; border-radius: 10px;
+            cursor: pointer; font-weight: 700;
+            z-index: 1001;
         }
-
-        .btn:hover::after {
-            width: 100%;
-        }
-
-        #loading {
-            text-align: center;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            margin-top: 50px;
-            color: var(--text-light);
-        }
+        iframe { width: 100%; height: 100%; border: none; }
 
         @media (max-width: 600px) {
             .controls { grid-template-columns: 1fr; }
-            header { padding: 50px 20px 30px; }
+            .modal { padding: 10px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Tostadores <span>Argentinos</span></h1>
-    <p class="subtitle" id="contador">Cargando colección...</p>
+    <h1>Tostadores Argentinos</h1>
+    <p class="subtitle" id="contador">Sincronizando Colección...</p>
 </header>
 
 <div class="container">
@@ -163,11 +195,17 @@
         <select id="select-ciudad" onchange="filtrar()">
             <option value="Todas">Todas las ciudades</option>
         </select>
-        <input type="text" id="buscador" placeholder="Buscar marca..." onkeyup="filtrar()">
+        <input type="text" id="buscador" placeholder="¿Qué marca buscás?" onkeyup="filtrar()">
     </div>
 
-    <div id="loading">Sincronizando...</div>
     <div class="grid-tostadores" id="grid"></div>
+</div>
+
+<div id="previewModal" class="modal">
+    <div class="modal-content">
+        <button class="close-modal" onclick="cerrarPreview()">CERRAR VISTA</button>
+        <iframe id="previewFrame" src=""></iframe>
+    </div>
 </div>
 
 <script>
@@ -183,7 +221,6 @@
             header: true,
             complete: (results) => {
                 tostadores = results.data.filter(f => f.TOSTADOR);
-                document.getElementById('loading').style.display = 'none';
                 armarSelector();
                 renderizar(tostadores);
                 document.getElementById('contador').innerText = `${tostadores.length} Marcas Curadas`;
@@ -193,10 +230,11 @@
 
     function armarSelector() {
         const select = document.getElementById('select-ciudad');
-        const ciudades = [...new Set(tostadores.map(t => t.UBICACION || 'Argentina'))].sort();
+        // Usamos la columna UBICACION o Ciudad (asegurate que en tu Sheets se llame así o ajustalo acá)
+        const ciudades = [...new Set(tostadores.map(t => t.UBICACION || t.Ciudad || 'Argentina'))].sort();
         
         ciudades.forEach(ciu => {
-            const cant = tostadores.filter(t => (t.UBICACION || 'Argentina') === ciu).length;
+            const cant = tostadores.filter(t => (t.UBICACION || t.Ciudad || 'Argentina') === ciu).length;
             const option = document.createElement('option');
             option.value = ciu;
             option.textContent = `${ciu} (${cant})`;
@@ -214,17 +252,31 @@
             
             const linkIg = t.INSTAGRAM || "#";
             const linkShop = t.WEB || t['WEB/TIENDA'] || "#";
+            const ubi = t.UBICACION || t.Ciudad || 'Argentina';
 
             card.innerHTML = `
+                <div class="location">📍 ${ubi}</div>
                 <h3 class="brand-name">${t.TOSTADOR}</h3>
-                <div class="location">${t.UBICACION || 'Argentina'}</div>
+                <div style="margin-bottom: 30px;"></div>
                 <div class="btn-group">
                     <a href="${linkIg}" target="_blank" class="btn">Instagram</a>
-                    <a href="${linkShop}" target="_blank" class="btn">Tienda Online</a>
+                    <a href="${linkShop}" target="_blank" class="btn">Tienda</a>
+                    <button class="btn btn-preview" onclick="abrirPreview('${linkShop}')">Vista Previa de Tienda</button>
                 </div>
             `;
             grid.appendChild(card);
         });
+    }
+
+    function abrirPreview(url) {
+        if(url === "#" || url === "") return alert("No hay link de tienda disponible.");
+        document.getElementById('previewFrame').src = url;
+        document.getElementById('previewModal').style.display = 'block';
+    }
+
+    function cerrarPreview() {
+        document.getElementById('previewModal').style.display = 'none';
+        document.getElementById('previewFrame').src = "";
     }
 
     function filtrar() {
@@ -232,12 +284,11 @@
         const busqueda = document.getElementById('buscador').value.toLowerCase();
 
         const filtrados = tostadores.filter(t => {
-            const ubi = t.UBICACION || 'Argentina';
+            const ubi = t.UBICACION || t.Ciudad || 'Argentina';
             const coincideCiudad = (ciudad === "Todas") || (ubi === ciudad);
             const coincideBusqueda = t.TOSTADOR.toLowerCase().includes(busqueda);
             return coincideCiudad && coincideBusqueda;
         });
-
         renderizar(filtrados);
     }
 
