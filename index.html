@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace de Tostadores | Especialidad</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #5D4037;
+            --bg: #F1F5F9;
+            --card: #FFFFFF;
+            --text: #0F172A;
+            --accent: #D97706;
+            --border: #E2E8F0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-market {
+            background: var(--primary);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header-market h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: -30px auto 40px auto;
+            padding: 0 20px;
+        }
+
+        .search-bar {
+            background: var(--card);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* GRID DE CARDS */
+        .grid-tostadores {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: var(--accent);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 0 5px 0;
+            color: var(--text);
+        }
+
+        .location {
+            color: #64748B;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-ig {
+            background: #F1F5F9;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-shop {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.3);
+        }
+
+        .btn:hover { opacity: 0.8; }
+
+        #loading { text-align: center; padding: 50px; font-weight: 600; color: var(--primary); }
+
+        @media (max-width: 600px) {
+            .grid-tostadores { grid-template-columns: 1fr; }
+            .header-market h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-market">
+    <h1>Torrefadores de Café <span>Argentina</span></h1>
+    <p>Diretório Federal de Café de Especialidade</p>
+</header>
+
+<div class="container">
+    <div class="search-bar">
+        <input type="text" id="buscador" placeholder="Procurar por nome ou cidade..." onkeyup="filtrar()">
+    </div>
+
+    <div id="loading">Ligando aos torrefadores...</div>
+    <div class="grid-tostadores" id="grid"></div>
+</div>
+
+<script>
+    const SHEET_ID = "10vUOhRr7IAXlRrkBphxEP4ApXYBgrnuxJq6G83GnfHI";
+    const GID = "1590442133";
+    const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+
+    let tostadores = [];
+
+    async function cargarDatos() {
+        Papa.parse(URL, {
+            download: true,
+            header: true,
+            complete: (results) => {
+                tostadores = results.data.filter(f => f.TOSTADOR);
+                document.getElementById('loading').style.display = 'none';
+                renderizar(tostadores);
+            },
+            error: (err) => {
+                document.getElementById('loading').innerText = "Erro ao carregar base de dados.";
+            }
+        });
+    }
+
+    function renderizar(lista) {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = "";
+
+        lista.forEach(t => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            // Verificação de links para evitar erros
+            const linkIg = t.INSTAGRAM || "#";
+            const linkShop = t.WEB || t['WEB/TIENDA'] || "#";
+
+            card.innerHTML = `
+                <div>
+                    <h3 class="brand-name">${t.TOSTADOR}</h3>
+                    <div class="location">📍 ${t.UBICACION || 'Argentina'}</div>
+                </div>
+                <div class="btn-group">
+                    <a href="${linkIg}" target="_blank" class="btn btn-ig">Instagram</a>
+                    <a href="${linkShop}" target="_blank" class="btn btn-shop">Ir para Loja ☕</a>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function filtrar() {
+        const query = document.getElementById('buscador').value.toLowerCase();
+        const filtrados = tostadores.filter(t => 
+            t.TOSTADOR.toLowerCase().includes(query) || 
+            t.UBICACION.toLowerCase().includes(query)
+        );
+        renderizar(filtrados);
+    }
+
+    cargarDatos();
+</script>
+
+</body>
+</html>
