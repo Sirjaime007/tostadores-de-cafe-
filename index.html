@@ -5,263 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tostadores Argentinos | Selección Boutique</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     
     <style>
-        :root {
-            --bg: #FDFCFB;
-            --text: #2D2421;
-            --text-light: #7A6F6C;
-            --border: #E8E2DF;
-            --accent: #6F4E37; /* Color Café Tostado */
-            --shadow: 0 10px 30px -10px rgba(111, 78, 55, 0.1);
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            margin: 0; padding: 0;
-        }
-
-        header {
-            padding: 60px 20px;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-            background: white;
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin: 0;
-            color: var(--text);
-        }
-
-        .subtitle {
-            font-size: 0.95rem;
-            color: var(--accent);
-            margin-top: 8px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        /* FILTROS */
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 50px;
-        }
-
-        select, input {
-            background: white;
-            border: 1px solid var(--border);
-            padding: 15px;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 1rem;
-            color: var(--text);
-            outline: none;
-            box-shadow: var(--shadow);
-        }
-
-        /* GRILLA DE TARJETAS */
-        .grid-tostadores {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-        }
-
-        .brand-name {
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin: 0;
-        }
-
-        .location {
-            font-size: 0.85rem;
-            color: var(--accent);
-            font-weight: 700;
-            margin: 5px 0 25px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: auto;
-        }
-
-        .btn {
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text);
-            text-align: center;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-            text-transform: uppercase;
-        }
-
-        .btn-preview {
-            grid-column: span 2;
-            background: var(--text);
-            color: white;
-            border: none;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        /* MODAL DE VISTA PREVIA */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(45, 36, 33, 0.9);
-            z-index: 1000;
-            padding: 40px;
-            box-sizing: border-box;
-        }
-        .modal-content {
-            background: white;
-            width: 100%; height: 100%;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-        .close-modal {
-            position: absolute;
-            top: 20px; right: 20px;
-            background: var(--accent);
-            color: white; border: none;
-            padding: 10px 20px; border-radius: 10px;
-            cursor: pointer; font-weight: 700;
-            z-index: 1001;
-        }
+        :root { --bg: #FDFCFB; --text: #2D2421; --accent: #6F4E37; --border: #E8E2DF; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
+        header { padding: 50px 20px; text-align: center; border-bottom: 1px solid var(--border); background: white; }
+        h1 { font-size: 2rem; font-weight: 800; margin: 0; }
+        .subtitle { font-size: 0.9rem; color: var(--accent); margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 40px; }
+        select, input { background: white; border: 1px solid var(--border); padding: 14px; border-radius: 12px; font-family: inherit; outline: none; }
+        .grid-tostadores { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .brand-name { font-size: 1.3rem; font-weight: 800; margin: 0; }
+        .location { font-size: 0.8rem; color: var(--accent); font-weight: 700; margin: 5px 0 20px; text-transform: uppercase; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; }
+        .btn { text-decoration: none; font-size: 0.75rem; font-weight: 700; color: var(--text); text-align: center; padding: 12px; border-radius: 10px; border: 1px solid var(--border); text-transform: uppercase; cursor: pointer; }
+        .btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .btn-preview { grid-column: span 2; background: var(--text); color: white; border: none; margin-top: 5px; }
+        
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: white; width: 100%; height: 100%; border-radius: 15px; overflow: hidden; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 15px; background: var(--accent); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; z-index: 1001; font-weight: bold; }
         iframe { width: 100%; height: 100%; border: none; }
-
-        @media (max-width: 600px) {
-            .controls { grid-template-columns: 1fr; }
-            .modal { padding: 10px; }
-        }
+        @media (max-width: 600px) { .controls { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <header>
     <h1>Tostadores Argentinos</h1>
-    <p class="subtitle" id="contador">Sincronizando Colección...</p>
+    <p class="subtitle" id="contador">Actualizando Colección...</p>
 </header>
 
 <div class="container">
     <div class="controls">
-        <select id="select-ciudad" onchange="filtrar()">
-            <option value="Todas">Todas las ciudades</option>
-        </select>
-        <input type="text" id="buscador" placeholder="¿Qué marca buscás?" onkeyup="filtrar()">
+        <select id="select-ciudad" onchange="filtrar()"><option value="Todas">Todas las ciudades</option></select>
+        <input type="text" id="buscador" placeholder="Buscar marca..." onkeyup="filtrar()">
     </div>
-
     <div class="grid-tostadores" id="grid"></div>
 </div>
 
 <div id="previewModal" class="modal">
-    <div class="modal-content">
-        <button class="close-modal" onclick="cerrarPreview()">CERRAR VISTA</button>
-        <iframe id="previewFrame" src=""></iframe>
-    </div>
+    <div class="modal-content"><button class="close-modal" onclick="cerrarPreview()">CERRAR</button><iframe id="previewFrame"></iframe></div>
 </div>
 
 <script>
     const SHEET_ID = "10vUOhRr7IAXlRrkBphxEP4ApXYBgrnuxJq6G83GnfHI";
     const GID = "1590442133";
-    const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}&nocache=${new Date().getTime()}`;
+    const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}&v=${new Date().getTime()}`;
 
     let tostadores = [];
 
-    async function cargarDatos() {
+    async function cargar() {
         Papa.parse(URL, {
-            download: true,
-            header: true,
+            download: true, header: true,
             complete: (results) => {
-                tostadores = results.data.filter(f => f.TOSTADOR);
-                armarSelector();
-                renderizar(tostadores);
+                // Limpiamos los nombres de las columnas para evitar problemas con la "/"
+                tostadores = results.data.map(row => {
+                    let newRow = {};
+                    for (let key in row) {
+                        newRow[key.trim().toUpperCase()] = row[key];
+                    }
+                    return newRow;
+                }).filter(f => f.TOSTADOR);
+                
+                armarMenu();
+                render(tostadores);
                 document.getElementById('contador').innerText = `${tostadores.length} Marcas Curadas`;
             }
         });
     }
 
-    function armarSelector() {
+    function armarMenu() {
         const select = document.getElementById('select-ciudad');
-        // Usamos la columna UBICACION o Ciudad (asegurate que en tu Sheets se llame así o ajustalo acá)
-        const ciudades = [...new Set(tostadores.map(t => t.UBICACION || t.Ciudad || 'Argentina'))].sort();
-        
+        const ciudades = [...new Set(tostadores.map(t => t.UBICACION || 'Argentina'))].sort();
         ciudades.forEach(ciu => {
-            const cant = tostadores.filter(t => (t.UBICACION || t.Ciudad || 'Argentina') === ciu).length;
-            const option = document.createElement('option');
-            option.value = ciu;
-            option.textContent = `${ciu} (${cant})`;
-            select.appendChild(option);
+            const cant = tostadores.filter(t => (t.UBICACION || 'Argentina') === ciu).length;
+            const opt = document.createElement('option');
+            opt.value = ciu; opt.textContent = `${ciu} (${cant})`;
+            select.appendChild(opt);
         });
     }
 
-    function renderizar(lista) {
+    function render(lista) {
         const grid = document.getElementById('grid');
         grid.innerHTML = "";
-
         lista.forEach(t => {
             const card = document.createElement('div');
             card.className = 'card';
-            
-            const linkIg = t.INSTAGRAM || "#";
-            const linkShop = t.WEB || t['WEB/TIENDA'] || "#";
-            const ubi = t.UBICACION || t.Ciudad || 'Argentina';
+            // Buscamos el link sin importar si la columna se llama WEB o WEB/TIENDA
+            const link = t['WEB/TIENDA'] || t['WEB'] || t['TIENDA'] || "";
+            const ig = t['INSTAGRAM'] || "#";
 
             card.innerHTML = `
-                <div class="location">📍 ${ubi}</div>
+                <div class="location">📍 ${t.UBICACION || 'Argentina'}</div>
                 <h3 class="brand-name">${t.TOSTADOR}</h3>
-                <div style="margin-bottom: 30px;"></div>
+                <div style="height:20px"></div>
                 <div class="btn-group">
-                    <a href="${linkIg}" target="_blank" class="btn">Instagram</a>
-                    <a href="${linkShop}" target="_blank" class="btn">Tienda</a>
-                    <button class="btn btn-preview" onclick="abrirPreview('${linkShop}')">Vista Previa de Tienda</button>
+                    <a href="${ig}" target="_blank" class="btn">Instagram</a>
+                    <a href="${link}" target="_blank" class="btn">Tienda</a>
+                    <button class="btn btn-preview" onclick="abrirPreview('${link}')">Vista Previa</button>
                 </div>
             `;
             grid.appendChild(card);
@@ -269,7 +116,7 @@
     }
 
     function abrirPreview(url) {
-        if(url === "#" || url === "") return alert("No hay link de tienda disponible.");
+        if(!url || url === "#" || url.length < 5) return alert("Este tostador no tiene link de tienda cargado en el Excel.");
         document.getElementById('previewFrame').src = url;
         document.getElementById('previewModal').style.display = 'block';
     }
@@ -280,20 +127,17 @@
     }
 
     function filtrar() {
-        const ciudad = document.getElementById('select-ciudad').value;
-        const busqueda = document.getElementById('buscador').value.toLowerCase();
-
+        const ciu = document.getElementById('select-ciudad').value;
+        const bus = document.getElementById('buscador').value.toLowerCase();
         const filtrados = tostadores.filter(t => {
-            const ubi = t.UBICACION || t.Ciudad || 'Argentina';
-            const coincideCiudad = (ciudad === "Todas") || (ubi === ciudad);
-            const coincideBusqueda = t.TOSTADOR.toLowerCase().includes(busqueda);
-            return coincideCiudad && coincideBusqueda;
+            const ubi = t.UBICACION || 'Argentina';
+            return (ciu === "Todas" || ubi === ciu) && t.TOSTADOR.toLowerCase().includes(bus);
         });
-        renderizar(filtrados);
+        render(filtrados);
     }
 
-    cargarDatos();
+    cargar();
 </script>
-
 </body>
 </html>
+
