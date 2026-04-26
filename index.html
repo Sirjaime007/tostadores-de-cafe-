@@ -16,14 +16,14 @@
         .subtitle { font-size: 0.9rem; color: var(--accent); margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
         .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 40px; }
-        select, input { background: white; border: 1px solid var(--border); padding: 14px; border-radius: 12px; font-family: inherit; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        select, input { background: white; border: 1px solid var(--border); padding: 14px; border-radius: 12px; font-family: inherit; outline: none; }
         .grid-tostadores { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
         .card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; transition: all 0.2s; }
-        .card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 20px rgba(111, 78, 55, 0.08); }
+        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
         .brand-name { font-size: 1.4rem; font-weight: 800; margin: 0; color: var(--text); }
         .location { font-size: 0.85rem; color: var(--accent); font-weight: 700; margin: 5px 0 25px; text-transform: uppercase; letter-spacing: 1px; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; }
-        .btn { text-decoration: none; font-size: 0.8rem; font-weight: 700; color: white; text-align: center; padding: 14px; border-radius: 10px; text-transform: uppercase; transition: background 0.2s; }
+        .btn { text-decoration: none; font-size: 0.8rem; font-weight: 700; color: white; text-align: center; padding: 14px; border-radius: 10px; text-transform: uppercase; }
         .btn-ig { background: #475569; }
         .btn-shop { background: var(--accent); }
         .btn:hover { filter: brightness(1.2); }
@@ -42,7 +42,7 @@
         <select id="select-ciudad" onchange="filtrar()"><option value="Todas">Todas las ciudades</option></select>
         <input type="text" id="buscador" placeholder="Buscar marca..." onkeyup="filtrar()">
     </div>
-    <div class="grid-tostadores" id="grid"></div>
+    <div id="resultados-grid" class="grid-tostadores"></div>
 </div>
 
 <script>
@@ -56,14 +56,16 @@
         Papa.parse(URL, {
             download: true, header: true,
             complete: (results) => {
-                // Mapeo inteligente sin romper los enlaces (respetando minúsculas)
-                tostadores = results.data.map(row => {
-                    let cleaned = {};
+                // PROCESAMIENTO DE DATOS SEGURO
+                tostadores = results.data.filter(row => row.TOSTADOR || row.Tostador).map(row => {
+                    let obj = {};
+                    // Normalizamos las llaves para que no importe la barra "/" o los espacios
                     for (let key in row) {
-                        cleaned[key.trim().toUpperCase()] = row[key].trim();
+                        let cleanKey = key.trim().toUpperCase().replace('/', '_');
+                        obj[cleanKey] = row[key].trim();
                     }
-                    return cleaned;
-                }).filter(f => f.TOSTADOR);
+                    return obj;
+                });
                 
                 armarMenu();
                 render(tostadores);
@@ -74,7 +76,6 @@
 
     function armarMenu() {
         const select = document.getElementById('select-ciudad');
-        // Usamos la columna UBICACION o CIUDAD
         const ciudades = [...new Set(tostadores.map(t => t.UBICACION || t.CIUDAD || 'Argentina'))].sort();
         ciudades.forEach(ciu => {
             const cant = tostadores.filter(t => (t.UBICACION || t.CIUDAD || 'Argentina') === ciu).length;
@@ -85,24 +86,24 @@
     }
 
     function render(lista) {
-        const grid = document.getElementById('grid');
+        const grid = document.getElementById('resultados-grid');
         grid.innerHTML = "";
         lista.forEach(t => {
             const card = document.createElement('div');
             card.className = 'card';
             
-            // Lógica para detectar el link de la tienda
-            const link = t['WEB/TIENDA'] || t['WEB'] || t['TIENDA'] || "";
-            const ig = t['INSTAGRAM'] || "#";
-            const ubi = t['UBICACION'] || t['CIUDAD'] || 'Argentina';
+            // BUSQUEDA FLEXIBLE DEL LINK DE TIENDA
+            // El reemplazo de "/" por "_" hace que busquemos WEB_TIENDA
+            const linkTienda = t.WEB_TIENDA || t.WEB || t.TIENDA || t.URL || "";
+            const linkIg = t.INSTAGRAM || "";
 
             card.innerHTML = `
-                <div class="location">📍 ${ubi}</div>
+                <div class="location">📍 ${t.UBICACION || t.CIUDAD || 'Argentina'}</div>
                 <h3 class="brand-name">${t.TOSTADOR}</h3>
                 <div style="height:25px"></div>
                 <div class="btn-group">
-                    <a href="${ig}" target="_blank" class="btn btn-ig">Instagram</a>
-                    <a href="${link}" target="_blank" class="btn btn-shop">Tienda</a>
+                    <a href="${linkIg}" target="_blank" class="btn btn-ig" ${linkIg ? '' : 'style="display:none"'}>Instagram</a>
+                    <a href="${linkTienda}" target="_blank" class="btn btn-shop" ${linkTienda ? '' : 'style="display:none"'}>Tienda</a>
                 </div>
             `;
             grid.appendChild(card);
@@ -123,5 +124,3 @@
 </script>
 </body>
 </html>
-
-
